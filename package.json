@@ -1,0 +1,35 @@
+{
+  "name": "biblia-virtual",
+  "version": "1.0.0",
+  "description": "biblia criada para facilitar a projeçao na igreja",
+  "main": "app.js",
+  "scripts": {
+    "start": "node . ",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cor": "0.0.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "express-handlebars": "^5.2.0"
+  },
+  "bin": "app.js",
+  "pkg": {
+    "assets": [
+      "node_modules/electron/**/*",
+      "node_modules/sliced/**/*",
+      "node_modules/deep-defaults/**/*",
+      "database/**/*",
+      "public/**/*",
+      "routes/**/*",
+      "setings/**/*",
+      "views/**/*"
+    ],
+    "targets": [
+      "node14-win-x64"
+    ]
+  }
+}
