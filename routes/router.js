@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const Biblia = require('../database/databiblia')
+const functions = require('../database/databiblia')
 
 //// routes
 router.get('/', (req, res) => {
@@ -9,19 +9,19 @@ router.get('/', (req, res) => {
 })
 
 router.get('/biblia', (req, res) => {
-    var livros = Biblia('livros', 'livros')
+    var livros = functions.getAllBooks()
     console.log(livros)
     res.json(livros)
 })
 
 router.post('/biblia/livro', (req, res) => {
-    var cap = Biblia(req.body.name, 'Cap')
+    var cap = functions.getAllChapter(req.body.name)
     res.json(cap)
 })
 
 router.post('/biblia/livro/capitulo', (req, res) => {
     console.log(req)
-    var vers = Biblia(req.body.name, req.body.cap)
+    var vers = functions.getChapter(req.body.name, req.body.cap)
     res.json(vers)
 })
 

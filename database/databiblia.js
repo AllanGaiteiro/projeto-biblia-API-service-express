@@ -1,13 +1,38 @@
 const fs = require('fs');
-
+/*
 const livros = [
     "Gênesis", "Êxodo", "Levítico", "Números", "Deuteronômio", "Josué", "Juízes", "Rute", "I Samuel", "II Samuel", "I Reis", "II Reis", "I Crônicas", "II Crônicas", "Esdras", "Neemias", "Ester", "Jó", "Salmos", "Provérbios", "Eclesiastes", "Cântico dos Cânticos", "Isaías", "Jeremias", "Lamentações de Jeremias", "Ezequiel", "Daniel", "Oséias", "Joel", "Amós", "Obadias", "Jonas", "Miquéias", "Naum", "Habacuque", "Sofonias", "Ageu", "Zacarias", "Malaquias", "Mateus", "Marcos", "Lucas", "João", "Atos", "Romanos", "I Coríntios", "II Coríntios", "Gálatas", "Efésios", "Filipenses", "Colossenses", "I Tessalonicenses", "II Tessalonicenses", "I Timóteo", "II Timóteo", "Tito", "Filemom", "Hebreus", "Tiago", "I Pedro", "II Pedro", "I João", "II João", "III João", "Judas", "Apocalipse",
 ]
+*/
 ////// joel
-const data = fs.readFileSync('./database/Biblia.txt', 'utf8')
-var livro = 'Gênesis'
-var cap = 4 //'all'
+const db_Biblia = fs.readFileSync('./database/bible/pt_nvi.json', 'utf8').split(0)
+//var livro = 'Gênesis'
+//var cap = 4 //'all'
+const fuctions = {}
 
+fuctions.getAllBooks = () => {
+    const array_of_books = db_Biblia.map(b => {return b.abbrev});
+    return {books: array_of_books};
+}
+
+fuctions.getAllChapter = (book)=>{
+    const array_of_chapters = 
+    db_Biblia.forEach(b => {
+        if (b.abbrev === book) {
+            return b.chapters.length;
+        }
+    });
+}
+
+fuctions.getChapter = (book,chapter) => {
+    const array_of_verses = db_Biblia.filter(b => {
+        if(b.abbrev === book && ((b.chapters.length + 1) >= chapter) && chapter > 0 ){
+            return true;
+        }else{
+            return false;
+        }} )
+}
+/*
 const Biblia = (livro, cap ) => {
 
     var indexL = livros.indexOf(livro)
@@ -65,4 +90,5 @@ const Biblia = (livro, cap ) => {
     console.log('ele nao é uma livro')
     }
 }
-module.exports = Biblia;
+*/
+module.exports = fuctions;
