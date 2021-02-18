@@ -5,24 +5,31 @@ const functions = require('../database/databiblia')
 //// routes
 router.get('/', (req, res) => {
     console.log("servidor rodando")
-    res.send('servidor rodando')
+    res.send('Bem vindo(a) a API da Biblia - Criada com Express.')
 })
 
 router.get('/biblia', (req, res) => {
-    var livros = functions.getAllBooks()
-    console.log(livros)
-    res.json(livros)
+    functions.getAllBooks().then((result)=>{
+        res.send(result);    
+    }).catch((err)=>{
+        console.error('Error in read of file database: ', err);
+    })
 })
 
 router.post('/biblia/livro', (req, res) => {
-    var cap = functions.getAllChapter(req.body.name)
-    res.json(cap)
+    functions.getAllChapter(req.body.name).then((result)=>{
+        res.json(result);    
+    }).catch((err)=>{
+        console.error('Error: ',err);
+    });
 })
 
 router.post('/biblia/livro/capitulo', (req, res) => {
-    console.log(req)
-    var vers = functions.getChapter(req.body.name, req.body.cap)
-    res.json(vers)
+    functions.getChapter(req.body.name, req.body.cap).then((result)=>{
+        res.json(result);    
+    }).catch((err)=>{
+        console.error('Error: ',err);
+    });
 })
 
 
