@@ -1,7 +1,7 @@
 {
-  "name": "biblia-virtual",
-  "version": "1.0.0",
-  "description": "biblia criada para facilitar a projeçao na igreja",
+  "name": "biblia-api-express",
+  "version": "2.0.0",
+  "description": "Api da Biblia em Express, criada para facilitar a produção do App Web - TBN",
   "main": "app.js",
   "scripts": {
     "start": "node . ",
