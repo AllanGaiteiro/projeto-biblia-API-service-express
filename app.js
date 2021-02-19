@@ -8,7 +8,7 @@
     const router = require('./routes/router');
     var cors = require('cors');
 //// config
-    const PORT = 1000
+    const PORT = 10000
     
     // bodyparser
         app.use(bodyParser.urlencoded({extended: true}))

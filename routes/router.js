@@ -25,7 +25,7 @@ router.post('/biblia/livro', (req, res) => {
 })
 
 router.post('/biblia/livro/capitulo', (req, res) => {
-    functions.getChapter(req.body.name, req.body.cap).then((result)=>{
+    functions.getChapter(req.body.name, parseInt(req.body.cap)).then((result)=>{
         res.json(result);    
     }).catch((err)=>{
         console.error('Error: ',err);
