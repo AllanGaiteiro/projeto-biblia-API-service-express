@@ -30,7 +30,7 @@ fuctions.getAllChapter = (book)=>{
         try {
             if(typeof(book) === 'string'){
                 const db_Biblia = JSON.parse(fs.readFileSync(dataBase));
-               resolve((db_Biblia['biblia'][`${book}`]))
+               resolve(db_Biblia['biblia'][`${book}`].chapters.length)
             }
         } catch (error) {
             rejects(error);
