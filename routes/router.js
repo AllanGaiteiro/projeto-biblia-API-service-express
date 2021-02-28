@@ -1,28 +1,38 @@
 const express = require('express')
 const router = express.Router()
-const Biblia = require('../database/databiblia')
+const functions = require('../database/databiblia')
 
 //// routes
 router.get('/', (req, res) => {
     console.log("servidor rodando")
-    res.send('servidor rodando')
+    res.send('Bem vindo(a) a API da Biblia - Criada com Express.')
 })
 
-router.get('/biblia', (req, res) => {
-    var livros = Biblia('livros', 'livros')
-    console.log(livros)
-    res.json(livros)
+router.post('/biblia', (req, res) => {
+    const {version} = req.body;
+    functions.getAllBooks(version).then((result)=>{
+        res.send(result);    
+    }).catch((err)=>{
+        console.error('Error in read of file database: ', err);
+    })
 })
 
 router.post('/biblia/livro', (req, res) => {
-    var cap = Biblia(req.body.name, 'Cap')
-    res.json(cap)
+    const {version, name} = req.body;
+    functions.getAllChapter(version, name).then((result)=>{
+        res.json(result);    
+    }).catch((err)=>{
+        console.error('Error: ',err);
+    });
 })
 
 router.post('/biblia/livro/capitulo', (req, res) => {
-    console.log(req)
-    var vers = Biblia(req.body.name, req.body.cap)
-    res.json(vers)
+    const {version, name, chapterNumber} = req.body;
+    functions.getChapter(version, name, parseInt(chapterNumber)).then((result)=>{
+        res.json(result);    
+    }).catch((err)=>{
+        console.error('Error: ',err);
+    });
 })
 
 

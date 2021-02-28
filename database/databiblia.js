@@ -1,68 +1,102 @@
 const fs = require('fs');
 
-const livros = [
-    "Gênesis", "Êxodo", "Levítico", "Números", "Deuteronômio", "Josué", "Juízes", "Rute", "I Samuel", "II Samuel", "I Reis", "II Reis", "I Crônicas", "II Crônicas", "Esdras", "Neemias", "Ester", "Jó", "Salmos", "Provérbios", "Eclesiastes", "Cântico dos Cânticos", "Isaías", "Jeremias", "Lamentações de Jeremias", "Ezequiel", "Daniel", "Oséias", "Joel", "Amós", "Obadias", "Jonas", "Miquéias", "Naum", "Habacuque", "Sofonias", "Ageu", "Zacarias", "Malaquias", "Mateus", "Marcos", "Lucas", "João", "Atos", "Romanos", "I Coríntios", "II Coríntios", "Gálatas", "Efésios", "Filipenses", "Colossenses", "I Tessalonicenses", "II Tessalonicenses", "I Timóteo", "II Timóteo", "Tito", "Filemom", "Hebreus", "Tiago", "I Pedro", "II Pedro", "I João", "II João", "III João", "Judas", "Apocalipse",
-]
-////// joel
-const data = fs.readFileSync('./database/Biblia.txt', 'utf8')
-var livro = 'Gênesis'
-var cap = 4 //'all'
+const fuctions = {}
 
-const Biblia = (livro, cap ) => {
-
-    var indexL = livros.indexOf(livro)
-    var obj = {}
-
-    /////// funcaa que criara os inputs de cada livro 
-    if (cap == 'livros') {
-        return livros;
-    }
-
-    if (indexL >= 0) {
-        var init = data.match(livros[indexL].toLocaleUpperCase())
-        var fim
-
-        if ((livros.length - 1) == indexL) {
-            obj[livro] = data.substring(init['index'])
-
-            // teste
-                //console.log(init + ' pos[' + init['index'] + '] ')
-        } else {
-            fim = data.match(livros[indexL + 1].toLocaleUpperCase())
-
-
-            obj[livro] = data.substring(init['index'], fim['index'])
-
-            //teste
-                //console.log(init + ' pos[' + init['index'] + '] | ' + fim + ' pos[' + fim['index'] + ']')
-        }
-        ////// dividindo capitulos 
-
-        obj[livro] = obj[livro].split('>>capitulo')
-        if (cap == 'Cap') {
-            ///// chamando os inputs dos capitulos
-            var caps = []
-            for (const i in obj[livro]) {
-                caps.push(i)
+fuctions.getAllBooks = (version) => {
+    return new Promise((resolve,rejects)=> {
+        try {
+            const dataBase = `./database/bible/json/pt_${version}.json`
+            console.log('GET All Books - init')
+            var db_Biblia
+            try {
+                db_Biblia = JSON.parse(fs.readFileSync(dataBase));
+            } catch (error) {
+                fuctions.db_SyntaxError(dataBase).then((result)=>{
+                    resolve(result['books'])
+                }).catch((error)=>{
+                    console.error('Error of syntax, not corrigido: ', error)
+                });
             }
-            return caps
-        } else {
-            ///// chamando o capitulo e seus versiculos
-            obj[livro][cap] = obj[livro][cap].split(/\d+/);
-            var capitulo = []
-            for (const i in obj[livro][cap]) {
-                capitulo.push(
-                    {numero: i,
-                    conteudo : obj[livro][cap][i]})
+            resolve(db_Biblia['books']);
+            console.log("Biblia - get all livros = ", db_Biblia['books'].length)      
+        } catch (err) {
+            rejects(err);
         }
-        
-        obj[livro][cap] = capitulo
-            //console.log(obj[livro][cap])
-        return obj[livro][cap]
-    }
-
-} else {
-    console.log('ele nao é uma livro')
-    }
+    })
+    
 }
-module.exports = Biblia;
+fuctions.getAllChapter = (version, book)=>{
+    return new Promise((resolve,rejects)=> {
+        try {
+            const dataBase = `./database/bible/json/pt_${version}.json`
+            if(typeof(book) === 'string'){
+                const db_Biblia = JSON.parse(fs.readFileSync(dataBase));
+               resolve(db_Biblia['biblia'][`${book}`].chapters.length)
+            }
+        } catch (error) {
+            rejects(error);
+        }
+    })
+    
+    
+}
+
+fuctions.getChapter = (version,book,chapter) => {
+    return new Promise((resolve,rejects)=> {
+        try {
+            const dataBase = `./database/bible/json/pt_${version}.json`
+            if(typeof(book) !== 'string'){
+                rejects('o tipo do Parametro book nao é string ') 
+            }else if(typeof(chapter) !== 'number' ) {
+                rejects('o tipo do Parametro chapter nao é number ')
+            }else{
+                const db_Biblia = JSON.parse(fs.readFileSync(dataBase));
+
+                resolve(db_Biblia['biblia'][`${book}`].chapters[chapter - 1])
+            }
+            
+        } catch (error) {
+            rejects(error);
+        }
+    })
+    
+}
+// Fix Error
+fuctions.db_SyntaxError = (dataBase) => {
+    return new Promise((resolve,rejects)=> {
+        try {
+            console.log('Fix SyntaxError - init ')
+            var db = fs.readFileSync(dataBase).toString().replace(/^\ufeff/g,"");
+            var db_corrigido = JSON.parse(db);
+            fs.writeFileSync(dataBase, JSON.stringify(db_corrigido, null, 2));
+            console.log('Fix SyntaxError - finish ')
+            resolve(db_corrigido);        
+        } catch (error) {
+            rejects(error)
+        }
+    })
+    
+}
+// criate Collection
+fuctions.setDataBaseOfBooks = () => {
+    return new Promise((resolve,rejects) => {
+        try {
+            var data = fs.readFileSync(dataBase).toString().replace(/^\ufeff/g,"")
+            var dataJSON = JSON.parse(data)
+            var newDate = {}
+            var books = []
+            dataJSON.forEach(b => {
+                newDate[`${b.name}`] = b 
+                books.push({name: b.name, abbrev: b.abbrev})
+            })
+            var db = {biblia: newDate,books: books}
+            fs.writeFileSync(dataBase, JSON.stringify(db, null, 2));
+            resolve('Deu Certo')
+        } catch (error) {
+            rejects();
+        }
+    })
+}
+
+
+module.exports = fuctions;
