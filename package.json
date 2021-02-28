@@ -1,6 +1,6 @@
 {
   "name": "biblia-api-express",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Api da Biblia em Express, criada para facilitar a produção do App Web - TBN",
   "main": "index.js",
   "scripts": {
