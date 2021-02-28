@@ -1,11 +1,11 @@
 const fs = require('fs');
 
-const dataBase = './database/bible/json/pt_nvi.json'
 const fuctions = {}
 
-fuctions.getAllBooks = () => {
+fuctions.getAllBooks = (version) => {
     return new Promise((resolve,rejects)=> {
         try {
+            const dataBase = `./database/bible/json/pt_${version}.json`
             console.log('GET All Books - init')
             var db_Biblia
             try {
@@ -25,9 +25,10 @@ fuctions.getAllBooks = () => {
     })
     
 }
-fuctions.getAllChapter = (book)=>{
+fuctions.getAllChapter = (version, book)=>{
     return new Promise((resolve,rejects)=> {
         try {
+            const dataBase = `./database/bible/json/pt_${version}.json`
             if(typeof(book) === 'string'){
                 const db_Biblia = JSON.parse(fs.readFileSync(dataBase));
                resolve(db_Biblia['biblia'][`${book}`].chapters.length)
@@ -40,9 +41,10 @@ fuctions.getAllChapter = (book)=>{
     
 }
 
-fuctions.getChapter = (book,chapter) => {
+fuctions.getChapter = (version,book,chapter) => {
     return new Promise((resolve,rejects)=> {
         try {
+            const dataBase = `./database/bible/json/pt_${version}.json`
             if(typeof(book) !== 'string'){
                 rejects('o tipo do Parametro book nao é string ') 
             }else if(typeof(chapter) !== 'number' ) {

@@ -8,8 +8,9 @@ router.get('/', (req, res) => {
     res.send('Bem vindo(a) a API da Biblia - Criada com Express.')
 })
 
-router.get('/biblia', (req, res) => {
-    functions.getAllBooks().then((result)=>{
+router.post('/biblia', (req, res) => {
+    const {version} = req.body;
+    functions.getAllBooks(version).then((result)=>{
         res.send(result);    
     }).catch((err)=>{
         console.error('Error in read of file database: ', err);
@@ -17,7 +18,8 @@ router.get('/biblia', (req, res) => {
 })
 
 router.post('/biblia/livro', (req, res) => {
-    functions.getAllChapter(req.body.name).then((result)=>{
+    const {version, name} = req.body;
+    functions.getAllChapter(version, name).then((result)=>{
         res.json(result);    
     }).catch((err)=>{
         console.error('Error: ',err);
@@ -25,7 +27,8 @@ router.post('/biblia/livro', (req, res) => {
 })
 
 router.post('/biblia/livro/capitulo', (req, res) => {
-    functions.getChapter(req.body.name, parseInt(req.body.cap)).then((result)=>{
+    const {version, name, chapterNumber} = req.body;
+    functions.getChapter(version, name, parseInt(chapterNumber)).then((result)=>{
         res.json(result);    
     }).catch((err)=>{
         console.error('Error: ',err);
